@@ -161,6 +161,8 @@ router.put('/:user/polls/:poll/options/:option/votefor', function(req, res, next
 });
 
 router.post('/:user/polls', auth, function(req, res, next) {
+    var options = req.body.options ? req.body.options.splice(0) : null;
+     
     var poll = new Poll(req.body);
     poll.user = req.user;
     
@@ -173,75 +175,38 @@ router.post('/:user/polls', auth, function(req, res, next) {
       req.user.save(function(err,user){
         if(err){return next(err);}
         
-        res.json(poll);
+        if(options){
+          saveOptions(options, poll);
+        }
+        else{
+          res.json(poll);
+        }
       });
-      
     });
-});
-
-/*
-
-router.get('/posts', function(req, res, next){
-  Post.find(function(err,posts){
-    if(err){return next(err);}
-
-    res.json(posts);
-  });
-});
-
-router.get('/posts/:post', function(req,res){
-  req.post.populate('comments', function(err,post){
-    if(err){return next(err);}
-
-    res.json(post);
-  });
-});
-
-router.put('/posts/:post/upvote', auth, function(req,res,next){
-  req.post.upvote(function(err,post){
-    if(err){return next(err);}
-
-    res.json(post);
-  });
-});
-
-router.post('/posts/:post/comments', auth, function(req, res, next){
-  var comment = new Comment(req.body);
-  comment.post = req.post;
-  comment.author = req.payload.username;
-
-  comment.save(function(err, comment){
-    if(err){return next(err);}
-
-    req.post.comments.push(comment);
-    req.post.save(function(err,post){
+     
+     
+    function saveOptions(arr, poll){
+    var thisOp = arr.shift();
+    var option = new Option(thisOp);
+    option.poll = poll;
+    
+    option.save(function(err, option){
       if(err){return next(err);}
-
-      res.json(comment);
-    });
-  });
+      
+      poll.options.push(option);
+      poll.save(function(err,poll){
+        if(err){return next(err);}
+        
+        if(arr.length > 0){
+          saveOptions(arr, poll);
+        }
+        else{
+          res.json(poll);
+        }
+      });
+    })
+  }
 });
-
-router.put('/posts/:post/comments/:comment/upvote', auth, function(req,res,next){
-  req.comment.upvote(function(err,comment){
-    if(err){return next(err);}
-
-    res.json(comment);
-  });
-});
-
-router.post('/posts', auth, function(req,res,next){
-  var post = new Post(req.body);
-  post.author = req.payload.username;
-
-  post.save(function(err,post){
-    if(err){return next(err);}
-
-    res.json(post);
-  });
-});
-
-*/
 
 router.post('/register', function(req, res, next){
   if(!req.body.username || !req.body.password){

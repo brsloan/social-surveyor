@@ -209,16 +209,17 @@ app.controller('MainCtrl', [
     $scope.addPoll = function(){
       if(!$scope.title || $scope.title === ''){return;}
       polls.create({
-        title: $scope.title.replace(/[^a-zA-Z0-9-_\s]/g, '')
+        title:  $scope.title.replace(/[^a-zA-Z0-9-_\s]/g, ''),
+        options: $scope.options
       }, function(poll){
-        polls.addOptions(poll._id, $scope.options, polls.clearNewOptions);
         $scope.pollLink = document.location.origin + "/#/" + auth.currentUser() + "/polls/" + poll.title;
         $scope.tweetLink = "https://twitter.com/intent/tweet?text=" + 
           encodeURIComponent(poll.title + '? Vote in my poll: ' + $scope.pollLink);
         $scope.urlEncodedLink = encodeURIComponent($scope.pollLink);
+        polls.clearNewOptions();
       });
-      $scope.title = '';
     };
+    
     $scope.addOption = polls.addEmptyOption;
     $scope.removeOption = function(){
       if(polls.newOptions.length > 2)
@@ -302,8 +303,6 @@ app.controller('PollCtrl', [
        });
     };
     
-    
-    
     drawTable();
     
     function drawTable(){
@@ -333,7 +332,6 @@ app.controller('PollCtrl', [
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
         chart.draw(data, options);
     }
-    
   }
 ])
 
