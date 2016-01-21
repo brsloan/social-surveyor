@@ -1,3 +1,11 @@
+.socialBtns {
+  margin-top: 20px;
+}
+
+.socialBtns div{
+  text-align: center;
+}
+
 @media only screen and (max-width : 768px) {
 
 .nav li {
