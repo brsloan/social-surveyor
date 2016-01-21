@@ -1,9 +1,9 @@
 google.setOnLoadCallback(function () {  
-    angular.bootstrap(document.body, ['flapperNews']);
+    angular.bootstrap(document.body, ['socialSurveyor']);
 });
 google.load('visualization', '1', {packages: ['corechart']});
 
-var app = angular.module('flapperNews', ['ui.router']);
+var app = angular.module('socialSurveyor', ['ui.router']);
 
 
 app.config([
@@ -212,8 +212,11 @@ app.controller('MainCtrl', [
         title: $scope.title.replace(/[^a-zA-Z0-9-_\s]/g, '')
       }, function(poll){
         polls.addOptions(poll._id, $scope.options, polls.clearNewOptions);
+        $scope.pollLink = document.location.origin + "/#/" + auth.currentUser() + "/polls/" + poll.title;
+        $scope.tweetLink = "https://twitter.com/intent/tweet?text=" + 
+          encodeURIComponent(poll.title + '? Vote in my poll: ' + $scope.pollLink);
+        $scope.urlEncodedLink = encodeURIComponent($scope.pollLink);
       });
-      
       $scope.title = '';
     };
     $scope.addOption = polls.addEmptyOption;

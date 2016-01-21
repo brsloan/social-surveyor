@@ -15,7 +15,7 @@ require('./models/Options');
 require('./config/passport');
 
 
-mongoose.connect('mongodb://localhost/news');
+mongoose.connect('mongodb://localhost/surveyor');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
