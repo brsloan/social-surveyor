@@ -15,21 +15,11 @@ app.config([
         url: '/home',
         templateUrl: '/home.html',
         controller: 'MainCtrl'
-        //resolve: {
-          //postPromise: ['polls', function(polls){
-            //return polls.getAll();
-          //}]
-        //}
     })
       .state('polls', {
         url: '/polls',
         templateUrl: '/polls.html',
         controller: 'PollsCtrl'
-        //resolve: {
-          //postPromise: ['polls', function(polls){
-            //return polls.getAll();
-          //}]
-        //}
     })
     .state('poll', {
         url: '/{username}/polls/{pollname}',
@@ -44,16 +34,6 @@ app.config([
           }]
         }
     })
-      .state('posts',{
-        url: '/posts/{id}',
-        templateUrl: '/posts.html',
-        controller: 'PostsCtrl',
-        resolve: {
-          post: ['$stateParams', 'posts', function($stateParams, posts){
-            return posts.get($stateParams.id);
-          }]
-        }
-      })
       .state('login',{
         url: '/login',
         templateUrl: '/login.html',
@@ -289,7 +269,7 @@ app.controller('PollCtrl', [
       var chosenOption = poll.options.filter(function(option){
         return option._id == $scope.chosenOption.id;
       })[0];
-      polls.voteForOption(username, poll, chosenOption, drawTable);
+      polls.voteForOption(username, poll, chosenOption, drawChart);
       localStorage.setItem(poll._id, true);
       $scope.hasVoted = true;
     };
@@ -299,13 +279,13 @@ app.controller('PollCtrl', [
        polls.addOptions(poll._id, [$scope.extraOption], function(newOption){
          poll.options.push({title: newOption.title, _id: newOption._id, votes: 0});
          $scope.extraOption.title = '';
-         drawTable();
+         drawChart();
        });
     };
     
-    drawTable();
+    drawChart();
     
-    function drawTable(){
+    function drawChart(){
         // Create the data table.
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Option');
@@ -335,30 +315,6 @@ app.controller('PollCtrl', [
   }
 ])
 
-app.controller('PostsCtrl',[
-  '$scope',
-  'posts',
-  'post',
-  'auth',
-  function($scope,posts,post,auth){
-    $scope.post = post;
-    $scope.addComment = function(){
-      if($scope.body === '') {return;}
-      posts.addComment(post._id, {
-        body: $scope.body,
-        author: 'user',
-      }).success(function(comment){
-        $scope.post.comments.push(comment);
-      })
-      $scope.body = '';
-    };
-    $scope.incrementUpvotes = function(comment){
-      posts.upvoteComment(post, comment);
-    };
-    $scope.isLoggedIn = auth.isLoggedIn;
-  }
-]);
-
 app.controller('AuthCtrl', [
   '$scope',
   '$state',
@@ -386,9 +342,13 @@ app.controller('AuthCtrl', [
 
 app.controller('NavCtrl', [
 '$scope',
+'$state',
 'auth',
-function($scope, auth){
+function($scope, $state, auth){
   $scope.isLoggedIn = auth.isLoggedIn;
   $scope.currentUser = auth.currentUser;
-  $scope.logOut = auth.logOut;
+  $scope.logOut = function(){
+    auth.logOut();
+    window.location.replace('/');
+  };
 }]);

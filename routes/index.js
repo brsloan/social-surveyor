@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
 var passport = require('passport');
 var User = mongoose.model('User');
@@ -11,18 +10,6 @@ var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 
 var Poll = mongoose.model('Poll');
 var Option = mongoose.model('Option');
-
-router.param('post', function(req,res,next,id){
-  var query = Post.findById(id);
-
-  query.exec(function(err,post){
-    if (err) {return next(err);}
-    if (!post) {return next(new Error('can\'t find post'));}
-
-    req.post = post;
-    return next();
-  });
-});
 
 router.param('comment',function(req,res,next,id){
   var query = Comment.findById(id);
@@ -82,12 +69,8 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/test', function(req, res, next) {
-    res.render('test', {title: 'Express'});
-})
-
+// GET all user's polls
 router.get('/:user/polls', function(req, res, next) {
-    
     req.user.populate('polls', function(err,user){
       if(err){return next(err);}
       
@@ -95,6 +78,7 @@ router.get('/:user/polls', function(req, res, next) {
     });
 });
 
+// GET a poll
 router.get('/:user/polls/:pollname', function(req, res, next) {
     Poll.findOne({title: req.pollname, user: req.user}, function(err,poll){
       if(err){return next(err);}
@@ -108,6 +92,7 @@ router.get('/:user/polls/:pollname', function(req, res, next) {
     });
 });
 
+// DELETE a poll
 router.delete('/:user/polls/:poll', auth, function(req, res, next) {
     req.poll.populate('options', function(err,poll){
       if(err){return next(err)}
@@ -123,6 +108,7 @@ router.delete('/:user/polls/:poll', auth, function(req, res, next) {
     });
 });
 
+// POST an array of options to a poll
 router.post('/:user/polls/:poll/options/', auth, function(req,res,next){
   var options = req.body;
   
@@ -152,6 +138,7 @@ router.post('/:user/polls/:poll/options/', auth, function(req,res,next){
   
 });
 
+// PUT - Vote for a poll
 router.put('/:user/polls/:poll/options/:option/votefor', function(req, res, next) {
     req.option.voteFor(function(err,option){
       if(err){return next(err);}
@@ -160,6 +147,7 @@ router.put('/:user/polls/:poll/options/:option/votefor', function(req, res, next
     });
 });
 
+//POST a new poll, with options
 router.post('/:user/polls', auth, function(req, res, next) {
     var options = req.body.options ? req.body.options.splice(0) : null;
      
