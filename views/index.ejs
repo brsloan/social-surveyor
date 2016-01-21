@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Voting App</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <title>Social Surveyor</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
 
-    
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -17,21 +17,21 @@
 
   <body >
 
-    <nav class="navbar navbar-default pull-right"  ng-controller="NavCtrl">
+    <nav class="navbar navbar-right"  ng-controller="NavCtrl">
       <ul class="nav navbar-nav">
-        <li ng-show="isLoggedIn()"><a>{{ currentUser() }}</a></li>
-        <li ng-show="isLoggedIn()"><a href="/#/home">Add Poll</a></li>
-        <li ng-show="isLoggedIn()"><a href="/#/polls">View Polls</a></li>
-        <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
-        <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
-        <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
+        <li ng-show="isLoggedIn()"><a><span class="glyphicon glyphicon-user"></span> {{ currentUser() }}</a></li>
+        <li ng-show="isLoggedIn()"><a href="/#/home"><span class="glyphicon glyphicon-plus-sign"></span> Add Poll</a></li>
+        <li ng-show="isLoggedIn()"><a href="/#/polls"><span class="glyphicon glyphicon-th-list"></span> View Polls</a></li>
+        <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()"><span class="glyphicon glyphicon-tree-conifer"></span> Log Out</a></li>
+        <li ng-hide="isLoggedIn()"><a href="/#/login"><span class="glyphicon glyphicon-user"></span> Log In</a></li>
+        <li ng-hide="isLoggedIn()"><a href="/#/register"><span class="glyphicon glyphicon-cog"></span> Register</a></li>
       </ul>
     </nav>
 
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
         <div class="page-header">
-          <h1>Social Surveyor</h1>
+          <h1><span class="glyphicon glyphicon-stats"></span> Social Surveyor</h1>
         </div>
         <ui-view></ui-view>
       </div>
@@ -75,6 +75,22 @@
         </div>
       </div>
       
+      <div ng-hide="isLoggedIn()">
+        <div>
+          <h2>Create custom surveys to share with the world and track their progress with automatically generated graphs.</h2>
+        </div>
+        <div id="chart_div"></div>
+        <div>
+          <h2>Social media integration allows you to share your graphs on your favorite social networks at the click of a button.</h2>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+          <a class="col-md-3" href="https://twitter.com/intent/tweet?text={{encodedSelfLink}}"><i class="fa fa-twitter fa-5x"></i></a>
+          <a class="col-md-3" href="http://www.facebook.com/sharer.php?u={{encodedSelfLink}}"><i class="fa fa-facebook fa-5x"></i></a>
+          <a class="col-md-3" href="http://www.reddit.com/submit?url={{encodedSelfLink}}"><i class="fa fa-reddit fa-5x"></i></a>
+          <a class="col-md-3" href="http://www.tumblr.com/share/link?url={{encodedSelfLink}}"><i class="fa fa-tumblr fa-5x"></i></a>
+        </div>
+      </div>
+      
     </script>
     
     <script type="text/ng-template" id="/polls.html">
@@ -87,10 +103,6 @@
     </script>
     
     <script type="text/ng-template" id="/poll.html">
-    
-      <div class="page-header">
-        <h1>Voting App</h1>
-      </div>
     
       <h2>{{poll.title}}?</h2>
       
@@ -107,7 +119,7 @@
       <form ng-hide="!isLoggedIn">
         <h4>Add an option:</h4>
         <input type="text" ng-model="extraOption.title" class="form-control" placeholder="A completely different option..." required></input>
-        <div class="btn btn-primary" ng-click="addOption()">Add</div>
+        <div class="btn btn-primary" ng-click="addOption()"><span class="glyphicon glyphicon-plus"></span> Add</div>
       </form>
       </div>
       

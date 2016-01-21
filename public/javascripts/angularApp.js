@@ -224,9 +224,37 @@ app.controller('MainCtrl', [
       if(polls.newOptions.length > 2)
         polls.newOptions.pop();
     };
-    
+    $scope.encodedSelfLink = encodeURIComponent(document.location.origin);
     
     $scope.isLoggedIn = auth.isLoggedIn;
+    
+    if(!auth.isLoggedIn())
+      drawChart();
+    
+    function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Western');
+        data.addColumn('number', 'Votes');
+        data.addRows([
+          ['The Good The Bad and The Ugly', 253],
+          ['Unforgiven', 225],
+          ['Django Unchained', 157],
+          ['Outlaw Josey Wales', 100],
+          ['True Grit - Coen Bros', 78]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Best Western',
+                        'legend': 'none',
+                       'height':500};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+
   }
 ])
 
