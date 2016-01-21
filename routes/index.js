@@ -5,8 +5,7 @@ var Comment = mongoose.model('Comment');
 var passport = require('passport');
 var User = mongoose.model('User');
 var jwt = require('express-jwt');
-var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
-//Again, change the above SECRET to .env var matching one in models/User.js
+var auth = jwt({secret: process.env.JWT_SECRET, userProperty: 'payload'});
 
 var Poll = mongoose.model('Poll');
 var Option = mongoose.model('Option');

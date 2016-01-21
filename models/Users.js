@@ -31,7 +31,7 @@ UserSchema.methods.generateJWT = function(){
     _id: this._id,
     username: this.username,
     exp: parseInt(exp.getTime() / 1000),
-  }, 'SECRET'); //You'll want to set the secret as a .env var
+  }, process.env.JWT_SECRET);
 }
 
 mongoose.model('User', UserSchema);
