@@ -1,0 +1,63 @@
+
+<form ng-submit="addPoll()" ng-show="isLoggedIn() && !pollLink">
+  <h2>New Poll</h2>
+  
+  <div class="form-group">
+    <input type="text" class="form-control" placeholder="Poll Name" ng-model="title" required></input>
+  </div>
+  
+  <h3>Options</h3>
+  
+  <div ng-repeat="option in options" class="form-group">
+    <input type="text" ng-model="option.title" placeholder="Poll Option" class="form-control" required></input>
+  </div>
+  <div class="form-group">
+    <div class="btn btn-success" ng-click="addOption()"><span class="glyphicon glyphicon-plus"></span> Add Option</div>
+    <div class="btn btn-primary btn-danger" ng-click="removeOption()"><span class="glyphicon glyphicon-minus"></span> Remove Option</div>
+  </div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span> Create Poll</button>
+  </div>
+</form>      
+
+<div ng-show="pollLink">
+  <h1>Nice! Share your poll at: <a href="{{pollLink}}">{{pollLink}}</a></h1>
+  <div class="row socialBtns">
+    <div class="col-md-3">
+      <a href="{{tweetLink}}"><i class="fa fa-twitter fa-5x"></i></a>
+    </div>
+    <div class="col-md-3">
+       <a href="http://www.facebook.com/sharer.php?u={{urlEncodedLink}}"><i class="fa fa-facebook fa-5x"></i></a>
+    </div>
+    <div class="col-md-3">
+      <a href="http://www.reddit.com/submit?url={{urlEncodedLink}}"><i class="fa fa-reddit fa-5x"></i></a>
+    </div>
+    <div class="col-md-3">
+       <a href="http://www.tumblr.com/share/link?url={{urlEncodedLink}}"><i class="fa fa-tumblr fa-5x"></i></a>
+    </div>
+  </div>
+</div>
+
+<div ng-hide="isLoggedIn()">
+  <div>
+    <h2>Create custom surveys to share with the world and track their progress with automatically generated graphs.</h2>
+  </div>
+  <div id="chart_div"></div>
+  <div>
+    <h2>Social media integration allows you to share your graphs on your favorite social networks at the click of a button.</h2>
+  </div>
+  <div class="row socialBtns">
+    <div class="col-md-3">
+      <a href="https://twitter.com/intent/tweet?text={{encodedSelfLink}}"><i class="fa fa-twitter fa-5x"></i></a>
+    </div>
+    <div class="col-md-3">
+      <a href="http://www.facebook.com/sharer.php?u={{encodedSelfLink}}"><i class="fa fa-facebook fa-5x"></i></a>
+    </div>
+    <div class="col-md-3">
+      <a href="http://www.reddit.com/submit?url={{encodedSelfLink}}"><i class="fa fa-reddit fa-5x"></i></a>
+    </div>
+    <div class="col-md-3">
+      <a href="http://www.tumblr.com/share/link?url={{encodedSelfLink}}"><i class="fa fa-tumblr fa-5x"></i></a>
+    </div>
+  </div>
+</div>

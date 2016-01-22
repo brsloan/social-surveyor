@@ -1,0 +1,7 @@
+<h2>Active Polls</h2>
+<div ng-repeat="poll in polls">
+  <h3>
+    <span ng-click="deletePoll(poll._id)" class="btn btn-danger glyphicon glyphicon-remove"></span>
+    <a href="/#/{{currentUser}}/polls/{{poll.title}}"> {{poll.title}}</a>
+  </h3>
+</div>

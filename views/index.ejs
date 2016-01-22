@@ -5,14 +5,21 @@
     <title>Social Surveyor</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/app/assets/css/master.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     
-    <script src="/javascripts/angularApp.js"></script>
-    
+    <script src="/app/app.module.js"></script>
+    <script src="/app/app.routes.js"></script>
+    <script src="/app/shared/auth/authFactory.js"></script>
+    <script src="/app/shared/polls/pollsFactory.js"></script>
+    <script src="/app/shared/navbar/navController.js"></script>
+    <script src="/app/shared/auth/authController.js"></script>
+    <script src="/app/components/home/homeController.js"></script>
+    <script src="/app/components/polls/pollsController.js"></script>
+    <script src="/app/components/poll/pollController.js"></script>
   </head>
 
   <body >
@@ -37,164 +44,7 @@
           <ui-view></ui-view>
         </div>
       </div>
-    
-      <script type="text/ng-template" id="/home.html">
-        
-        <form ng-submit="addPoll()" ng-show="isLoggedIn() && !pollLink">
-          <h2>New Poll</h2>
-          
-          <div class="form-group">
-            <input type="text" class="form-control" placeholder="Poll Name" ng-model="title" required></input>
-          </div>
-          
-          <h3>Options</h3>
-          
-          <div ng-repeat="option in options" class="form-group">
-            <input type="text" ng-model="option.title" placeholder="Poll Option" class="form-control" required></input>
-          </div>
-          <div class="form-group">
-            <div class="btn btn-success" ng-click="addOption()"><span class="glyphicon glyphicon-plus"></span> Add Option</div>
-            <div class="btn btn-primary btn-danger" ng-click="removeOption()"><span class="glyphicon glyphicon-minus"></span> Remove Option</div>
-          </div>
-          <div class="form-group">
-            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span> Create Poll</button>
-          </div>
-        </form>      
-        
-        <div ng-show="pollLink">
-          <h1>Nice! Share your poll at: <a href="{{pollLink}}">{{pollLink}}</a></h1>
-          <div class="row socialBtns">
-            <div class="col-md-3">
-              <a href="{{tweetLink}}"><i class="fa fa-twitter fa-5x"></i></a>
-            </div>
-            <div class="col-md-3">
-               <a href="http://www.facebook.com/sharer.php?u={{urlEncodedLink}}"><i class="fa fa-facebook fa-5x"></i></a>
-            </div>
-            <div class="col-md-3">
-              <a href="http://www.reddit.com/submit?url={{urlEncodedLink}}"><i class="fa fa-reddit fa-5x"></i></a>
-            </div>
-            <div class="col-md-3">
-               <a href="http://www.tumblr.com/share/link?url={{urlEncodedLink}}"><i class="fa fa-tumblr fa-5x"></i></a>
-            </div>
-          </div>
-        </div>
-        
-        <div ng-hide="isLoggedIn()">
-          <div>
-            <h2>Create custom surveys to share with the world and track their progress with automatically generated graphs.</h2>
-          </div>
-          <div id="chart_div"></div>
-          <div>
-            <h2>Social media integration allows you to share your graphs on your favorite social networks at the click of a button.</h2>
-          </div>
-          <div class="row socialBtns">
-            <div class="col-md-3">
-              <a href="https://twitter.com/intent/tweet?text={{encodedSelfLink}}"><i class="fa fa-twitter fa-5x"></i></a>
-            </div>
-            <div class="col-md-3">
-              <a href="http://www.facebook.com/sharer.php?u={{encodedSelfLink}}"><i class="fa fa-facebook fa-5x"></i></a>
-            </div>
-            <div class="col-md-3">
-              <a href="http://www.reddit.com/submit?url={{encodedSelfLink}}"><i class="fa fa-reddit fa-5x"></i></a>
-            </div>
-            <div class="col-md-3">
-              <a href="http://www.tumblr.com/share/link?url={{encodedSelfLink}}"><i class="fa fa-tumblr fa-5x"></i></a>
-            </div>
-          </div>
-        </div>
-        
-      </script>
-      
-      <script type="text/ng-template" id="/polls.html">
-      
-        <h2>Active Polls</h2>
-        <div ng-repeat="poll in polls">
-          <h3>
-            <span ng-click="deletePoll(poll._id)" class="btn btn-danger glyphicon glyphicon-remove"></span>
-            <a href="/#/{{currentUser}}/polls/{{poll.title}}"> {{poll.title}}</a>
-          </h3>
-        </div>
-        
-      </script>
-      
-      <script type="text/ng-template" id="/poll.html">
-      
-        <h2>{{poll.title}}?</h2>
-        
-        <div class="form-group">
-          <form ng-submit="voteForOption()" ng-hide="hasVoted">
-            <div ng-repeat="option in poll.options" class="form-control">
-              <input type="radio" value="{{option._id}}" name="chosenOption" ng-model="chosenOption.id" required> {{option.title}}
-            </div>
-            <button type="submit" class="btn btn-primary">Cast your meaningless vote.</button>
-          </form>
-        </div>
-        
-        <div class="form-group">
-          <form ng-hide="!isLoggedIn">
-            <h4>Add an option:</h4>
-            <input type="text" ng-model="extraOption.title" class="form-control" placeholder="A completely different option..." required></input>
-            <div class="btn btn-primary" ng-click="addOption()">
-              <span class="glyphicon glyphicon-plus"></span> Add
-            </div>
-          </form>
-        </div>
-        
-      <div id="chart_div" ng-show="hasVoted"></div>
-        
-      </script>
-        
-      <script type="text/ng-template" id="/register.html">
   
-        <div ng-show="error" class="alert alert-danger row">
-          <span>{{ error.message }}</span>
-        </div>
-  
-        <form ng-submit="register()"
-          style="margin-top:30px;">
-          <h3>Register</h3>
-  
-          <div class="form-group">
-            <input type="text"
-              class="form-control"
-              placeholder="Username"
-              ng-model="user.username"></input>
-          </div>
-          <div class="form-group">
-            <input type="password"
-              class="form-control"
-              placeholder="Password"
-              ng-model="user.password"></input>
-          </div>
-          <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-cog"></span>
- Register</button>
-        </form>
-      </script>
-  
-      <script type="text/ng-template" id="/login.html">
-  
-        <div ng-show="error" class="alert alert-danger row">
-          <span>{{ error.message }}</span>
-        </div>
-  
-        <form ng-submit="logIn()" style="margin-top:30px;">
-          <h3>Log In</h3>
-  
-          <div class="form-group">
-            <input type="text"
-              class="form-control"
-              placeholder="Username"
-              ng-model="user.username"></input>
-          </div>
-          <div class="form-group">
-            <input type="password"
-              class="form-control"
-              placeholder="Password"
-              ng-model="user.password"></input>
-          </div>
-          <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span> Log In</button>
-        </form>
-      </script>
     </div>
   </body>
 </html>

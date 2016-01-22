@@ -34,11 +34,6 @@ router.param('poll',function(req, res, next, id) {
     });
 });
 
-router.param('pollname',function(req, res, next, id) {
-    req.pollname = id;
-    return next();
-})
-
 router.param('option',function(req, res, next, id) {
     var query = Option.findById(id);
     
@@ -79,7 +74,7 @@ router.get('/:user/polls', function(req, res, next) {
 
 // GET a poll
 router.get('/:user/polls/:pollname', function(req, res, next) {
-    Poll.findOne({title: req.pollname, user: req.user}, function(err,poll){
+    Poll.findOne({title: req.params.pollname, user: req.user}, function(err,poll){
       if(err){return next(err);}
       if(!poll){return new Error('Couldn\'t find poll.');}
       
