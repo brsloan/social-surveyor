@@ -47,11 +47,6 @@ angular.module('socialSurveyor')
               }
             }]
           })
-          .state('test', {
-            url: '/test',
-            templateUrl: '/test',
-            controller: 'TestCtrl'
-          })
     
         $urlRouterProvider.otherwise('home');
     }]);
